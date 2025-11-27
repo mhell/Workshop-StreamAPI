@@ -227,6 +227,13 @@ public class StreamExercise {
 
         personMap = people.stream().collect(Collectors.groupingBy(Person::getLastName));
 
+        /*
+        Map<String, List<Person>> personMap = new HashMap<>();
+        people.stream().forEach(person ->
+                        personMap.computeIfAbsent(person.getLastName(), k -> new ArrayList<>())
+                                .add(person));
+         */
+
         assertNotNull(personMap);
         assertEquals(expectedSize, personMap.size());
     }
@@ -238,13 +245,12 @@ public class StreamExercise {
     public void task14() {
         LocalDate[] _2020_dates = null;
         LocalDate startDate = LocalDate.of(2020, 1, 1);
-        LocalDate endDate = LocalDate.of(2020, 12, 31);
-
-        Predicate<LocalDate> hasNext = date -> !date.equals(endDate.plusDays(1));
+        LocalDate endDate = startDate.plusYears(1);
+        Predicate<LocalDate> hasNext = date -> !date.equals(endDate);
         UnaryOperator<LocalDate> next = day -> day.plusDays(1);
 
         _2020_dates = Stream.iterate(startDate, hasNext, next).toArray(LocalDate[]::new);
-        //_2020_dates= Stream.iterate(startDate,d -> d.plusDays(1)).limit(ChronoUnit.DAYS.between(startDate,endDate)+1).toArray(LocalDate[]::new);
+        //_2020_dates= Stream.iterate(startDate, next).limit(ChronoUnit.DAYS.between(startDate,endDate)).toArray(LocalDate[]::new);
 
         assertNotNull(_2020_dates);
         assertEquals(366, _2020_dates.length);
